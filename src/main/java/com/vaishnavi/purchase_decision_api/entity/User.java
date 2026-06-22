@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class User {
     //← EMERGENCY_FUND / SAVING_FOR_GOAL / MINDFUL_SPENDING
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FixedExpense> fixedExpenses;
+    private List<FixedExpense> fixedExpenses = new ArrayList<>();;
     //← rent, EMIs, subscriptions, utilities
 
 
