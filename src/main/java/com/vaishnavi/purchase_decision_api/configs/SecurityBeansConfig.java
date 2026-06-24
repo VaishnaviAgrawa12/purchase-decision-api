@@ -9,9 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class SecurityBeansConfig {
 
     @Bean
