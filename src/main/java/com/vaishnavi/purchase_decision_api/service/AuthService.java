@@ -1,9 +1,15 @@
 package com.vaishnavi.purchase_decision_api.service;
 
+import com.vaishnavi.purchase_decision_api.dtos.AuthResponse;
 import com.vaishnavi.purchase_decision_api.dtos.LoginRequest;
 import com.vaishnavi.purchase_decision_api.dtos.RegisterRequest;
 import com.vaishnavi.purchase_decision_api.entity.User;
+import com.vaishnavi.purchase_decision_api.exceptions.EmailAlreadyExistsException;
+import com.vaishnavi.purchase_decision_api.exceptions.InvalidPasswordException;
+import com.vaishnavi.purchase_decision_api.exceptions.UserNotFoundException;
 import com.vaishnavi.purchase_decision_api.repository.UserRepository;
+import com.vaishnavi.purchase_decision_api.security.JwtUtil;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,11 +20,12 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public User register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered");
+            throw new EmailAlreadyExistsException("Email already registered");
         }
 
         User user = new User();
@@ -26,19 +33,25 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new AuthResponse(user.getName(), user.getEmail(), token);
     }
 
-    public User login(LoginRequest loginRequest){
+    public AuthResponse login(LoginRequest loginRequest){
 
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(()-> new RuntimeException("User not found"));
+                .orElseThrow(()-> new UserNotFoundException("No account found with this email"));
 
         if(!passwordEncoder.matches(loginRequest.getPassword(),user.getPassword())){
-            throw new RuntimeException("Invalid Password");
+            throw new InvalidPasswordException("Incorrect password");
         }
 
-        return user;
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return new AuthResponse(user.getName(), user.getEmail(), token);
 
 
 
