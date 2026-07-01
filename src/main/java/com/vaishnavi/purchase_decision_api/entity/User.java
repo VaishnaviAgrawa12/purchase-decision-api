@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.List;
 
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -31,15 +30,22 @@ public class User {
     private String name;
 
     private BigDecimal monthlyIncome;
-    private BigDecimal savingTarget;
+    private BigDecimal savingsTarget;
 
     @Enumerated(EnumType.STRING)
     private PrimaryMoneyGoal primaryMoneyGoal;
-    //← EMERGENCY_FUND / SAVING_FOR_GOAL / MINDFUL_SPENDING
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FixedExpense> fixedExpenses = new ArrayList<>();;
-    //← rent, EMIs, subscriptions, utilities
+    private List<FixedExpense> fixedExpenses = new ArrayList<>();
 
+    // sums only active fixed expenses — used by the score calculator
+    public BigDecimal getTotalFixedExpenses() {
+        return fixedExpenses.stream()
+                .filter(FixedExpense::getActive)
+                .map(FixedExpense::getExpenseAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Decision> decisions = new ArrayList<>();
 }
