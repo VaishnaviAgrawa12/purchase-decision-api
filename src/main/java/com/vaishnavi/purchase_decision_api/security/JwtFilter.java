@@ -70,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // (code below — read and understand it)
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                        user,        // ← replace with your actual user variable
+                        user.getEmail(),        // ← replace with your actual user variable
                         null,
                         List.of()    // no roles for now
                 );

@@ -1,5 +1,6 @@
 package com.vaishnavi.purchase_decision_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vaishnavi.purchase_decision_api.enums.PurchaseType;
 import com.vaishnavi.purchase_decision_api.enums.Verdict;
 import jakarta.persistence.*;
@@ -23,6 +24,7 @@ public class Decision {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID decisionId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false )
     private User user;

@@ -1,6 +1,7 @@
 package com.vaishnavi.purchase_decision_api.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class FixedExpense {
     @GeneratedValue(strategy =  GenerationType.UUID)
     private UUID expenseId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

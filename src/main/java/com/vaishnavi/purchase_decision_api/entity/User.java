@@ -2,9 +2,7 @@ package com.vaishnavi.purchase_decision_api.entity;
 
 import com.vaishnavi.purchase_decision_api.enums.IncomeBracket;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,9 +38,13 @@ public class User {
     private BigDecimal savingsTarget;
 
     // --- relationships ---
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FixedExpense> fixedExpenses = new ArrayList<>();
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Decision> decisions = new ArrayList<>();
 
