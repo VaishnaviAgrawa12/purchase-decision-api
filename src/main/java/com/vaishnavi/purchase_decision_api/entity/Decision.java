@@ -2,6 +2,7 @@ package com.vaishnavi.purchase_decision_api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vaishnavi.purchase_decision_api.enums.PurchaseType;
+import com.vaishnavi.purchase_decision_api.enums.UsageFrequency;
 import com.vaishnavi.purchase_decision_api.enums.Verdict;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,11 @@ public class Decision {
 
     @Enumerated(EnumType.STRING)
     private PurchaseType purchaseType;
+
+    @Enumerated(EnumType.STRING)
+    private UsageFrequency usageFrequency;
+
+    private BigDecimal monthlyRecurringCost;
 
     private String reason;
 
