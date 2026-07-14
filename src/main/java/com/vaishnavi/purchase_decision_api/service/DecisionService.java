@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 public class DecisionService {
 
  private final DecisionRepository decisionRepository;
+ private final LlmClient llmClient;
 
  private final AffordScoreCalculator scoreCalculator = new AffordScoreCalculator();
  private final SavingsPlanCalculator savingsPlanCalculator = new SavingsPlanCalculator();
@@ -68,7 +69,14 @@ public class DecisionService {
    decision.setMonthlyRecurringCost(recurringCost);
    decision.setVerdict(result.getVerdict());
    decision.setAffordScore(result.getScore());
-   decision.setAiExplanation(null);   // LLM fills this later (Week 3)
+  String explanation = llmClient.explainDecision(
+          decisionRequest.getItemName(),
+          decisionRequest.getPrice(),
+          result.getVerdict(),
+          result.getScore(),
+          result.getDisposableIncome()
+  );
+  decision.setAiExplanation(explanation);
 
    decisionRepository.save(decision);
 
