@@ -25,6 +25,10 @@ public class DecisionService {
 
  public DecisionResponse makeDecision(User user , DecisionRequest decisionRequest){
 
+  if (user.getMonthlyIncome() == null) {
+   throw new IllegalStateException("Please set your financial profile before making a decision");
+  }
+
   UsageFrequency usage = (decisionRequest.getUsageFrequency() != null)
           ? decisionRequest.getUsageFrequency()
           : UsageFrequency.MONTHLY;

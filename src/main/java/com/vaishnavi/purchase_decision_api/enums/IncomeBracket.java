@@ -14,7 +14,7 @@ public enum IncomeBracket {
     private BigDecimal midpoint;
 
     IncomeBracket(BigDecimal midpoint){
-        midpoint = this.midpoint;
+        this.midpoint = midpoint;
     }
 
     public BigDecimal getMidpoint(){
