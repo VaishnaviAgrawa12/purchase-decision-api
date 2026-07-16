@@ -8,6 +8,7 @@ import com.vaishnavi.purchase_decision_api.entity.Decision;
 import com.vaishnavi.purchase_decision_api.entity.User;
 import com.vaishnavi.purchase_decision_api.enums.UsageFrequency;
 import com.vaishnavi.purchase_decision_api.enums.Verdict;
+import com.vaishnavi.purchase_decision_api.exceptions.ProfileNotSetException;
 import com.vaishnavi.purchase_decision_api.repository.DecisionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,11 @@ public class DecisionService {
 
  public DecisionResponse makeDecision(User user , DecisionRequest decisionRequest){
 
-  if (user.getMonthlyIncome() == null) {
-   throw new IllegalStateException("Please set your financial profile before making a decision");
+  if (user.getMonthlyIncome() == null || user.getSavingsTarget() == null) {
+   throw new ProfileNotSetException(
+           "Please set your financial profile before making a decision");
   }
+
 
   UsageFrequency usage = (decisionRequest.getUsageFrequency() != null)
           ? decisionRequest.getUsageFrequency()
