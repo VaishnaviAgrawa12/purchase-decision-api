@@ -114,7 +114,7 @@ Content-Type: application/json
 
 {
   "itemName": "Sony headphones",
-  "price": 28000,
+  "price": 30000,
   "category": "Electronics",
   "purchaseType": "WANT",
   "usageFrequency": "DAILY"
@@ -124,13 +124,18 @@ Content-Type: application/json
 **Response**
 ```json
 {
-  "itemName": "Sony headphones",
-  "price": 28000,
-  "verdict": "SKIP",
-  "affordScore": 35,
-  "aiExplanation": "It looks like investing in those Sony headphones might not be the best choice right now, considering your monthly income and expenditures. With a score of 35 out of 100, it's a good idea to either save up a bit more or look for more budget-friendly alternatives that won't stretch your finances.",
-  "disposableIncome": 27000.00,
-  "savingsPlan": null
+    "itemName": "Sony headphones",
+    "price": 30000,
+    "verdict": "WAIT",
+    "affordScore": 65,
+    "aiExplanation": "It looks like your desire for those Sony headphones is strong, but your current financial situation suggests it might be wise to hold off for now. With your monthly disposable income, it’s great to know you’re prioritizing your budget, and saving a bit more could allow you to enjoy that purchase without any stress. Patience can pay off, so maybe consider setting aside a little each month to make it even easier to treat yourself later!",
+    "disposableIncome": 24000.00,
+    "savingsPlan": {
+        "shortfall": 6000.00,
+        "monthlySavings": 24000.00,
+        "monthsNeeded": 1,
+        "targetDate": "2026-08-16"
+    }
 }
 ```
 
