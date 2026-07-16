@@ -35,19 +35,13 @@ public class AffordScoreCalculator {
         BigDecimal ratio = price.divide(effectiveDisposable, 2, RoundingMode.HALF_UP);
 
 
-        if(ratio.compareTo(new BigDecimal("0.20")) <= 0){
-            score = 90;
-        }else if (ratio.compareTo(new BigDecimal("0.40")) <= 0){
-            score = 75;
-        }else if (ratio.compareTo(new BigDecimal("0.60")) <= 0){
-            score = 60;
-        } else if (ratio.compareTo(new BigDecimal("0.85")) <= 0){
-            score = 45;
-        } else if (ratio.compareTo(BigDecimal.ONE) <= 0){
-            score = 30;
-        } else {
-            score = 15;
-        }
+        if (ratio.compareTo(new BigDecimal("0.20")) <= 0)      score = 90;
+        else if (ratio.compareTo(new BigDecimal("0.40")) <= 0) score = 80;
+        else if (ratio.compareTo(new BigDecimal("0.60")) <= 0) score = 72;
+        else if (ratio.compareTo(new BigDecimal("0.85")) <= 0) score = 60;
+        else if (ratio.compareTo(BigDecimal.ONE) <= 0)         score = 50;
+        else if (ratio.compareTo(new BigDecimal("1.50")) <= 0) score = 45;
+        else                                                    score = 15;
 
         if(purchaseType == PurchaseType.NEED){
             score += 15;
@@ -71,6 +65,10 @@ public class AffordScoreCalculator {
             score = 100;
         } else if (score < 0) {
             score = 0;
+        }
+
+        if (ratio.compareTo(BigDecimal.ONE) > 0 && score > 69) {
+            score = 69;   // over budget → WAIT at best, never BUY
         }
 
         Verdict verdict;
