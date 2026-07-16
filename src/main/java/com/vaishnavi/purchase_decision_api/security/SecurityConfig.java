@@ -33,9 +33,8 @@ public class SecurityConfig {
 
                 // define which endpoints are public vs protected
                 .authorizeHttpRequests(auth -> auth
-                        // anyone can register and login — no token needed
                         .requestMatchers("/api/auth/**").permitAll()
-                        // everything else — must have a valid JWT
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
