@@ -57,9 +57,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         ex.printStackTrace();
         return ResponseEntity.status(500).body(
-                new ErrorResponse(500,
-                        "DEBUG: " + ex.getClass().getSimpleName() + " — " + ex.getMessage(),
-                        LocalDateTime.now())
+                new ErrorResponse(500, "Something went wrong", LocalDateTime.now())
         );
     }
 }
