@@ -134,7 +134,7 @@ Content-Type: application/json
     "savingsPlan": {
         "shortfall": 6000.00,
         "monthlySavings": 24000.00,
-        "monthsNeeded": 1,
+        "monthsNeeded": 2,
         "targetDate": "2026-08-16"
     }
 }
