@@ -20,6 +20,7 @@ public class SavingsPlanCalculator {
         // months needed = shortfall ÷ monthly disposable, rounded UP
         int monthsNeeded = shortfall
                 .divide(monthlySavings, 0, RoundingMode.CEILING)
+                .add(BigDecimal.ONE)
                 .intValue();
 
         LocalDate targetDate = LocalDate.now().plusMonths(monthsNeeded);

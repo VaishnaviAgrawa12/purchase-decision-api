@@ -10,6 +10,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.time.LocalDateTime;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -40,7 +42,18 @@ public class SecurityConfig {
 
                 // plug JwtFilter into the chain
                 // runs BEFORE Spring's built-in UsernamePasswordAuthenticationFilter
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(401);
+                    response.setContentType("application/json");
+                    response.getWriter().write(
+                            "{\"status\":401,"
+                                    + "\"message\":\"Authentication required. Provide a valid Bearer token.\","
+                                    + "\"timestamp\":\"" + LocalDateTime.now() + "\"}"
+                    );
+                })
+        );
 
         return http.build();
     }
