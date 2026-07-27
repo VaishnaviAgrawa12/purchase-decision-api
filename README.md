@@ -5,6 +5,7 @@ A REST API that answers one question — **"Should I buy this?"** — and backs 
 Submit a purchase, get a verdict (**BUY** / **WAIT** / **SKIP**), an affordability score, and — when the answer is WAIT — a savings plan showing exactly how long to save and at what pace. An LLM turns the numbers into plain-English reasoning.
 
 **Live API:** `https://purchase-decision-api-production.up.railway.app`
+**Interactive docs:** [Swagger UI](https://purchase-decision-api-production.up.railway.app/swagger-ui/index.html)
 
 ---
 
@@ -133,7 +134,7 @@ Content-Type: application/json
     "savingsPlan": {
         "shortfall": 6000.00,
         "monthlySavings": 24000.00,
-        "monthsNeeded": 1,
+        "monthsNeeded": 2,
         "targetDate": "2026-08-16"
     }
 }
