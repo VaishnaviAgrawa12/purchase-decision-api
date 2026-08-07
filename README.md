@@ -9,6 +9,33 @@ Submit a purchase, get a verdict (**BUY** / **WAIT** / **SKIP**), an affordabili
 
 ---
 
+## Try it in your browser
+
+Everything is testable from Swagger UI — no Postman, no curl, no signup, no local setup.
+
+1. Open the [Swagger UI](https://purchase-decision-api-production.up.railway.app/swagger-ui/index.html).
+2. **`POST /api/auth/demo`** → *Try it out* → *Execute*. No request body. You get a token for a throwaway account that **already has a financial profile**. Copy the `token`.
+3. Click the green **Authorize** button (top right), paste the token, *Authorize*, *Close*. Paste the raw token only — Swagger adds the `Bearer ` prefix itself. It's remembered across page reloads.
+4. **`POST /api/decision`** → pick any example from the dropdown → *Execute*.
+
+The demo profile has **₹24,500 disposable income** per month (₹62,500 income − ₹25,500 fixed expenses − 20% saved), and the three sample purchases are picked to land on a different verdict each:
+
+| Example | Score | Verdict |
+|---|---|---|
+| Standing desk, ₹15,000, NEED | 75 | **BUY** |
+| Sony headphones, ₹30,000, WANT, daily use | 65 | **WAIT** + 2-month savings plan |
+| Second-hand car, ₹450,000, LUXURY, ₹9,000/mo running cost | 10 | **SKIP** |
+
+### Using your own account
+
+**`POST /api/auth/register`** with your own email, or **`POST /api/auth/login`** as the shared demo user `demo@purchasedecision.app` / `Demo@1234`. Then call **`PUT /api/users/profile`** *before* `POST /api/decision` — without a profile there's nothing to score against and the decision endpoint returns `400`.
+
+The shared demo account is reset to its documented profile every time the service restarts, so it can't stay broken. `POST /api/auth/demo` mints a private account per call and avoids the shared state altogether.
+
+Set `DEMO_ENABLED=false` to remove the seeded account and the `/api/auth/demo` endpoint entirely.
+
+---
+
 ## The core design decision
 
 **The math decides the verdict. The AI only explains it.**
@@ -100,16 +127,17 @@ Keeping these pure makes them trivially unit-testable and guarantees the scoring
 
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
+| POST | `/api/auth/demo` | — | Throwaway account with a profile already set, returns JWT |
 | POST | `/api/auth/register` | — | Create an account, returns JWT |
 | POST | `/api/auth/login` | — | Authenticate, returns JWT |
 | PUT | `/api/users/profile` | Bearer | Set income bracket, fixed expenses, savings target |
-| POST | `/api/decisions` | Bearer | Submit a purchase, get a verdict |
+| POST | `/api/decision` | Bearer | Submit a purchase, get a verdict |
 
 ### Example — making a decision
 
 **Request**
 ```http
-POST /api/decisions
+POST /api/decision
 Authorization: Bearer <token>
 Content-Type: application/json
 
@@ -182,18 +210,29 @@ docker run --name purchase-db \
   -e POSTGRES_DB=purchasedecision \
   -p 5432:5432 -d postgres
 
-# set environment variables
-export DATABASE_URL=jdbc:postgresql://localhost:5432/purchasedecision
-export DB_USERNAME=vaishnavi
-export DB_PASSWORD=password123
-export JWT_SECRET=<a-long-random-string-32-chars-minimum>
-export OPENAI_API_KEY=<your-openai-key>
-
 # run
 ./mvnw spring-boot:run
 ```
 
-The API starts on `http://localhost:8080`.
+That's it — the defaults in `application.properties` match the `docker run` above, so
+nothing needs exporting to get a working local instance. The API starts on
+`http://localhost:8080`, and `/` redirects to the Swagger UI.
+
+Without `OPENAI_API_KEY` the decision endpoint still works; it just returns the
+rule-based explanation instead of the LLM one.
+
+**Overrides**, all optional locally and all required in production:
+
+```bash
+export DATABASE_URL=jdbc:postgresql://localhost:5432/purchasedecision
+export DB_USERNAME=vaishnavi
+export DB_PASSWORD=password123
+export JWT_SECRET=<a-long-random-string-32-chars-minimum>   # required in production
+export OPENAI_API_KEY=<your-openai-key>
+```
+
+The bundled `jwt.secret` fallback is a development convenience and is **not** safe
+to deploy with — set `JWT_SECRET` in any real environment.
 
 ---
 

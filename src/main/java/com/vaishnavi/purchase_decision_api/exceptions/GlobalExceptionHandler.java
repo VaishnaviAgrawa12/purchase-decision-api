@@ -5,14 +5,15 @@ import com.vaishnavi.purchase_decision_api.dtos.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 
@@ -47,7 +48,14 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                // sorted so the same bad request always produces the same message —
+                // otherwise the field order shifts between calls
+                .sorted(Comparator.comparing(FieldError::getField))
+                .map(error -> error.getField().startsWith("check")
+                        // a cross-field check (see FinancialProfileRequest); its
+                        // "field" is a derived getter, not something the caller sent
+                        ? error.getDefaultMessage()
+                        : error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
 
         return ResponseEntity.status(400).body(

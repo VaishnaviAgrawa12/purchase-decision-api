@@ -28,8 +28,11 @@ public class AffordScoreCalculator {
 
         // if there's no disposable income, nothing is affordable
         // NEED still gets a minimum score so it never SKIPs; everything else scores 0
-        if (disposable.compareTo(BigDecimal.ZERO) <= 0 ) {
+        // returning here also keeps the ratio below from dividing by zero
+        if (effectiveDisposable.compareTo(BigDecimal.ZERO) <= 0) {
             score = (purchaseType == PurchaseType.NEED) ? 40 : 0;
+            Verdict floorVerdict = (score >= 40) ? Verdict.WAIT : Verdict.SKIP;
+            return new ScoreResult(score, floorVerdict, disposable, effectiveDisposable);
         }
 
         BigDecimal ratio = price.divide(effectiveDisposable, 2, RoundingMode.HALF_UP);

@@ -36,7 +36,22 @@ public class SecurityConfig {
                 // define which endpoints are public vs protected
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                        // Swagger UI and the OpenAPI document. /v3/api-docs (no trailing
+                        // slash) and the .yaml variant are separate paths from
+                        // /v3/api-docs/** — all three have to be listed or the UI loads
+                        // as an empty page.
+                        .requestMatchers(
+                                "/",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/favicon.ico",
+                                "/error"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
 

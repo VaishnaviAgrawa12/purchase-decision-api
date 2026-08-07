@@ -9,7 +9,15 @@ import java.time.LocalDate;
 public class SavingsPlanCalculator {
 
 
+    /**
+     * @return the plan, or {@code null} when there is nothing left over each month
+     *         to save with — there is no honest timeline to give in that case.
+     */
     public SavingsPlan calculate(BigDecimal price, BigDecimal effectiveDisposable) {
+
+        if (effectiveDisposable == null || effectiveDisposable.compareTo(BigDecimal.ZERO) <= 0) {
+            return null;
+        }
 
         // how much more they need beyond this month's disposable
         BigDecimal shortfall = price.subtract(effectiveDisposable);
