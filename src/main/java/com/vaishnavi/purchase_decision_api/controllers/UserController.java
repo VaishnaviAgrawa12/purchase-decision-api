@@ -6,6 +6,7 @@ import com.vaishnavi.purchase_decision_api.dtos.ErrorResponse;
 import com.vaishnavi.purchase_decision_api.dtos.FinancialProfileRequest;
 import com.vaishnavi.purchase_decision_api.dtos.UserProfileResponse;
 import com.vaishnavi.purchase_decision_api.entity.User;
+import com.vaishnavi.purchase_decision_api.exceptions.ProfileNotSetException;
 import com.vaishnavi.purchase_decision_api.exceptions.UserNotFoundException;
 import com.vaishnavi.purchase_decision_api.repository.UserRepository;
 import com.vaishnavi.purchase_decision_api.service.UserService;
@@ -22,6 +23,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,35 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+
+    @Operation(
+            summary = "Read your saved financial profile",
+            description = """
+                    Returns the same shape as `PUT /profile`. Responds `400` when no
+                    profile has been set yet, which is how a client can tell whether to
+                    send the user through profile setup before asking for a decision.
+                    """,
+            security = @SecurityRequirement(name = OpenApiConfig.BEARER_SCHEME)
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "The saved profile"),
+            @ApiResponse(responseCode = "400", description = "No profile set yet",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Missing, expired or invalid token",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> getProfile(
+            @Parameter(hidden = true) Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        if (user.getMonthlyIncome() == null || user.getSavingsTarget() == null) {
+            throw new ProfileNotSetException("No financial profile set yet");
+        }
+        return ResponseEntity.ok(UserProfileResponse.from(user));
+    }
 
     @Operation(
             summary = "Create or replace your financial profile",

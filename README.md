@@ -4,14 +4,33 @@ A REST API that answers one question — **"Should I buy this?"** — and backs 
 
 Submit a purchase, get a verdict (**BUY** / **WAIT** / **SKIP**), an affordability score, and — when the answer is WAIT — a savings plan showing exactly how long to save and at what pace. An LLM turns the numbers into plain-English reasoning.
 
-**Live API:** `https://purchase-decision-api-production.up.railway.app`
-**Interactive docs:** [Swagger UI](https://purchase-decision-api-production.up.railway.app/swagger-ui/index.html)
+**Live app:** `https://purchase-decision-api-production.up.railway.app`
+**Interactive docs:** [Swagger UI](https://purchase-decision-api-production.up.railway.app/swagger-ui/index.html) (also at `/docs`)
 
 ---
 
 ## Try it in your browser
 
-Everything is testable from Swagger UI — no Postman, no curl, no signup, no local setup.
+Open the root URL and you get the **web app** — a small single-page front end served
+by the same Spring Boot process, so there's no second deployment and no CORS to
+configure.
+
+1. Open the [app](https://purchase-decision-api-production.up.railway.app).
+2. Hit **Try it with a sample profile**. That calls `POST /api/auth/demo` behind the
+   scenes and drops you straight on the decision form with a profile already set.
+3. Type a thing and a price, pick NEED / WANT / LUXURY, get the verdict.
+
+Creating your own account walks you through the financial profile first, then the
+same decision form. The token is kept in `localStorage`, so a reload picks up where
+you left off.
+
+The front end is three files — `index.html`, `app.css`, `app.js` — in
+`src/main/resources/static/`. No framework, no build step, no `node_modules`: the
+jar is still the whole deployment.
+
+### Or drive the API directly
+
+Everything is also testable from Swagger UI — no Postman, no curl, no signup, no local setup.
 
 1. Open the [Swagger UI](https://purchase-decision-api-production.up.railway.app/swagger-ui/index.html).
 2. **`POST /api/auth/demo`** → *Try it out* → *Execute*. No request body. You get a token for a throwaway account that **already has a financial profile**. Copy the `token`.
@@ -99,6 +118,8 @@ When the verdict is WAIT, a separate calculator works out the shortfall, how man
 - **OpenAI API** for explanations, with rule-based fallback
 - **Docker** (multi-stage build) · **Railway** deployment
 - **Maven**
+- **Front end:** hand-written HTML / CSS / vanilla JS, served as static resources
+  from the same jar — no framework and no build step
 
 ---
 
@@ -107,12 +128,17 @@ When the verdict is WAIT, a separate calculator works out the shortfall, how man
 A single Spring Boot service organised in clean layers:
 
 ```
+Static      →  the web app (index.html / app.css / app.js), same origin
 Controller  →  receives HTTP requests, delegates (no logic)
 Service     →  business logic; translates between API and database shapes
 Repository  →  database access (Spring Data JPA)
 Entity      →  maps to database tables
 DTO         →  the shape of data in and out of the API
 ```
+
+The front end is a client of the public API and nothing more — it calls the same
+endpoints Swagger does, with the same JWT. Nothing is exposed to it that isn't
+already documented.
 
 Two classes are pure, framework-free Java — no Spring, no database, no annotations:
 
@@ -130,6 +156,7 @@ Keeping these pure makes them trivially unit-testable and guarantees the scoring
 | POST | `/api/auth/demo` | — | Throwaway account with a profile already set, returns JWT |
 | POST | `/api/auth/register` | — | Create an account, returns JWT |
 | POST | `/api/auth/login` | — | Authenticate, returns JWT |
+| GET | `/api/users/profile` | Bearer | Read the saved profile; `400` when none is set yet |
 | PUT | `/api/users/profile` | Bearer | Set income bracket, fixed expenses, savings target |
 | POST | `/api/decision` | Bearer | Submit a purchase, get a verdict |
 
@@ -215,8 +242,11 @@ docker run --name purchase-db \
 ```
 
 That's it — the defaults in `application.properties` match the `docker run` above, so
-nothing needs exporting to get a working local instance. The API starts on
-`http://localhost:8080`, and `/` redirects to the Swagger UI.
+nothing needs exporting to get a working local instance. `http://localhost:8080`
+serves the web app, and `/docs` the Swagger UI.
+
+Editing anything under `src/main/resources/static/` needs a restart to take effect —
+the files are served from `target/classes`, not from the source tree.
 
 Without `OPENAI_API_KEY` the decision endpoint still works; it just returns the
 rule-based explanation instead of the LLM one.
