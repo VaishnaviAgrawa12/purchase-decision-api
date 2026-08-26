@@ -13,16 +13,24 @@
   --rule:       #d6cfc0;
   --rule-soft:  #e3ddd0;
 
-  --buy:   #1f6b4a;
-  --wait:  #a96a1c;
-  --skip:  #a63a2e;
-  --accent: var(--ink);
+  /* Verdict hues. These aren't decoration — each one means something, and
+     they're the only strong colour on the page. */
+  --buy:    #1d6b4c;
+  --wait:   #a2661a;
+  --skip:   #a63a2e;
+  --luxury: #6b3f6e;
+
+  /* One cool accent against the warm paper: chosen selections, links, the
+     primary action. */
+  --accent:      #1f5f5b;
+  --accent-wash: #e7efec;
 
   --serif: "Instrument Serif", "Iowan Old Style", Palatino, Georgia, serif;
   --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --measure: 34rem;
+  --measure: 34rem;   /* comfortable reading column, and the whole page on mobile */
+  --spread: 70rem;    /* the two-column page, once there's width for one */
   --pad: clamp(1.25rem, 5vw, 3rem);
 }
 
@@ -36,9 +44,13 @@
     --rule:       #33302a;
     --rule-soft:  #262420;
 
-    --buy:  #6ec39a;
-    --wait: #e0a75c;
-    --skip: #e08a7e;
+    --buy:    #6ec39a;
+    --wait:   #e0a75c;
+    --skip:   #e08a7e;
+    --luxury: #c49ac9;
+
+    --accent:      #74c2ba;
+    --accent-wash: #17241f;
   }
 }
 
@@ -66,12 +78,21 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: .5;
+  opacity: 1;
   background-image:
-    radial-gradient(circle at 20% 15%, rgba(180,160,120,.13), transparent 55%),
-    radial-gradient(circle at 82% 78%, rgba(140,150,130,.10), transparent 50%);
+    radial-gradient(48rem 34rem at 12% 0%,   rgba(206,158,110,.20), transparent 70%),
+    radial-gradient(42rem 32rem at 92% 12%,  rgba(104,150,143,.16), transparent 70%),
+    radial-gradient(46rem 38rem at 62% 100%, rgba(150,132,176,.13), transparent 70%);
 }
-@media (prefers-color-scheme: dark) { .grain { opacity: .7; } }
+@media (prefers-color-scheme: dark) {
+  .grain {
+    opacity: .85;
+    background-image:
+      radial-gradient(48rem 34rem at 12% 0%,   rgba(214,160,104,.13), transparent 70%),
+      radial-gradient(42rem 32rem at 92% 12%,  rgba(88,168,158,.13), transparent 70%),
+      radial-gradient(46rem 38rem at 62% 100%, rgba(150,124,186,.11), transparent 70%);
+  }
+}
 
 /* ── shell ───────────────────────────────────────────────────────────── */
 
@@ -95,7 +116,7 @@ body {
 }
 .mark-glyph {
   width: .62rem; height: .62rem;
-  border: 1.5px solid var(--ink);
+  border: 1.5px solid var(--accent);
   border-radius: 50%;
   border-right-color: transparent;
   border-bottom-color: transparent;
@@ -143,6 +164,63 @@ body {
 .screen { max-width: var(--measure); margin: 0 auto; }
 .screen[hidden] { display: none; }
 
+/* ── the spread ───────────────────────────────────────────────────────
+   One column on small screens. Once there's room, the page splits into a
+   voice column (headings, the verdict, prose) and a ledger column (the
+   numbers), divided by a hairline — the way a ruled account book runs a
+   margin down the page. */
+
+.spread { display: grid; gap: 2.75rem; }
+.col-main { min-width: 0; }
+.col-side { min-width: 0; }
+
+.side-head {
+  margin: 0 0 .9rem;
+  font-family: var(--mono);
+  font-size: .68rem;
+  font-weight: 400;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.side-note {
+  margin: 1.4rem 0 0;
+  font-size: .82rem;
+  line-height: 1.6;
+  color: var(--ink-faint);
+  max-width: 24rem;
+}
+
+@media (min-width: 62rem) {
+  .screen { max-width: var(--spread); }
+
+  /* No align-items here on purpose: the columns stretch to the taller of the
+     two, so the margin rule runs the full height of the spread instead of
+     stopping wherever the sidebar text happens to end. */
+  .spread {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
+    gap: clamp(3rem, 5.5vw, 5rem);
+  }
+
+  /* Wider than the voice column wants to be — hold the line length. */
+  .col-main > .display,
+  .col-main > .lede,
+  .col-main > .sub { max-width: 32rem; }
+
+  .col-side {
+    border-left: 1px solid var(--rule-soft);
+    padding-left: clamp(2rem, 3.5vw, 3.25rem);
+  }
+  /* Nothing to show in the margin? Then no margin rule either. */
+  .col-side:not(:has(> :not([hidden]))) { border-left: 0; padding-left: 0; }
+
+  .sticky { position: sticky; top: 2.5rem; }
+
+  /* The hero's second column reads better dropped a little off the top. */
+  .spread-hero .col-side { padding-top: .4rem; }
+}
+
 .foot {
   position: relative;
   z-index: 1;
@@ -176,7 +254,11 @@ body {
   line-height: 1.06;
   letter-spacing: -.015em;
 }
-.display em { font-style: italic; color: var(--ink-soft); }
+.display em { font-style: italic; }
+/* The headline says buy / wait / skip — so it may as well show them. */
+.display .w-buy  { color: var(--buy); }
+.display .w-wait { color: var(--wait); }
+.display .w-skip { color: var(--skip); }
 
 .title {
   margin: 0 0 .5rem;
@@ -207,34 +289,34 @@ body {
 
 /* ── gate ────────────────────────────────────────────────────────────── */
 
-.hero { padding-bottom: 3rem; }
-
 .cta-row { display: flex; flex-wrap: wrap; gap: .6rem; }
 .cta-end { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--rule-soft); }
 
 .how {
   list-style: none;
   margin: 0;
-  padding: 2rem 0 0;
-  border-top: 1px solid var(--rule-soft);
+  padding: 0;
   display: grid;
-  gap: 1.35rem;
+  gap: 1.2rem;
 }
 .how li { display: flex; gap: 1rem; align-items: baseline; }
 .how-n {
   font-family: var(--mono);
   font-size: .72rem;
-  color: var(--ink-faint);
+  color: var(--accent);
   letter-spacing: .08em;
 }
 .how p { margin: 0; font-family: var(--serif); font-size: 1.2rem; line-height: 1.35; }
 
+@media (max-width: 61.99rem) {
+  .col-side { padding-top: 2.25rem; border-top: 1px solid var(--rule-soft); }
+  .col-side:not(:has(> :not([hidden]))) { padding-top: 0; border-top: 0; }
+}
+
 /* ── forms ───────────────────────────────────────────────────────────── */
 
-.sheet { max-width: 26rem; }
-.sheet-wide { max-width: 34rem; }
-
 .form { display: grid; gap: 1.5rem; margin-top: 1.9rem; }
+.form-narrow { max-width: 22rem; }
 
 .field { display: grid; gap: .45rem; }
 .field-narrow { max-width: 100%; }
@@ -260,7 +342,7 @@ input[type=text], input[type=email], input[type=password], input[type=number] {
   transition: border-color .18s;
 }
 input::placeholder { color: var(--ink-faint); opacity: .55; }
-input:focus { outline: none; border-bottom-color: var(--ink); }
+input:focus { outline: none; border-bottom-color: var(--accent); }
 input:focus-visible { outline: none; }
 input[type=number] { -moz-appearance: textfield; appearance: textfield; font-family: var(--mono); font-size: 1.08rem; }
 input[type=number]::-webkit-outer-spin-button,
@@ -273,7 +355,8 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
   border-bottom: 1px solid var(--rule);
   transition: border-color .18s;
 }
-.amount-in:focus-within { border-bottom-color: var(--ink); }
+.amount-in-narrow { max-width: 9rem; }
+.amount-in:focus-within { border-bottom-color: var(--accent); }
 .amount-in input { border-bottom: 0; }
 .unit { font-family: var(--mono); font-size: .95rem; color: var(--ink-faint); }
 
@@ -306,12 +389,22 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
   line-height: 1.3;
   transition: border-color .15s, color .15s, background .15s;
 }
-.chip:hover { border-color: var(--ink-faint); color: var(--ink); }
+.chip:hover { border-color: var(--accent); color: var(--ink); }
 .chip.is-on {
-  border-color: var(--ink);
+  border-color: var(--accent);
   color: var(--paper);
-  background: var(--ink);
+  background: var(--accent);
 }
+
+/* NEED / WANT / LUXURY each answer in their own colour, so the choice is
+   already halfway to the verdict before you submit. */
+.chip[data-tone=NEED].is-on   { background: var(--buy);    border-color: var(--buy); }
+.chip[data-tone=WANT].is-on   { background: var(--wait);   border-color: var(--wait); }
+.chip[data-tone=LUXURY].is-on { background: var(--luxury); border-color: var(--luxury); }
+
+.chip[data-tone=NEED]:hover   { border-color: var(--buy); }
+.chip[data-tone=WANT]:hover   { border-color: var(--wait); }
+.chip[data-tone=LUXURY]:hover { border-color: var(--luxury); }
 .chip small { display: block; font-size: .68rem; opacity: .6; margin-top: .12rem; }
 
 /* mode toggle — two words separated by a hairline, not a pill switch */
@@ -334,8 +427,8 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
   transition: color .15s, background .15s;
 }
 .mode + .mode { border-left: 1px solid var(--rule); }
-.mode:hover { color: var(--ink); }
-.mode.is-on { background: var(--ink); color: var(--paper); }
+.mode:hover { color: var(--accent); }
+.mode.is-on { background: var(--accent); color: var(--paper); }
 
 /* itemised expenses */
 
@@ -383,25 +476,25 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 }
 .btn:disabled { opacity: .45; cursor: default; }
 
-.btn-primary { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.btn-primary:hover:not(:disabled) { background: transparent; color: var(--ink); }
+.btn-primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.btn-primary:hover:not(:disabled) { background: transparent; color: var(--accent); }
 
 .btn-ghost { background: transparent; color: var(--ink-soft); border-color: var(--rule); }
-.btn-ghost:hover:not(:disabled) { border-color: var(--ink); color: var(--ink); }
+.btn-ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 
 .btn-block { width: 100%; }
 
 .link {
   background: none; border: 0; padding: 0;
   font-family: inherit; font-size: inherit;
-  color: var(--ink);
+  color: var(--accent);
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: .22em;
-  text-decoration-color: var(--rule);
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
   transition: text-decoration-color .15s;
 }
-.link:hover { text-decoration-color: var(--ink); }
+.link:hover { text-decoration-color: var(--accent); }
 
 .switch { margin: 1.2rem 0 0; font-size: .87rem; color: var(--ink-soft); }
 .switch + .switch { margin-top: .5rem; }
@@ -446,24 +539,14 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 .ledger .v-strong { font-weight: 500; }
 .ledger .row-total { border-top: 1px solid var(--rule); border-bottom: 0; margin-top: .2rem; padding-top: .6rem; }
 .ledger .row-total .k { color: var(--ink); }
+.ledger .row-total .v { color: var(--accent); }
 
-.preview { margin-top: -.4rem; }
 .preview:empty { display: none; }
-
-.slack { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--rule-soft); }
 
 /* ── past decisions ──────────────────────────────────────────────────── */
 
-.past { margin-top: 3rem; padding-top: 1.6rem; border-top: 1px solid var(--rule-soft); }
-.past-head {
-  margin: 0 0 .9rem;
-  font-family: var(--mono);
-  font-size: .68rem;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  font-weight: 400;
-}
+.past { margin-top: 2.4rem; }
+.past:first-child { margin-top: 0; }
 .past-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .05rem; }
 .past-list li {
   display: flex;
@@ -489,10 +572,29 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 
 /* ── result ──────────────────────────────────────────────────────────── */
 
-.result { --v: var(--ink); }
+.result { --v: var(--accent); }
 .result[data-verdict=BUY]  { --v: var(--buy); }
 .result[data-verdict=WAIT] { --v: var(--wait); }
 .result[data-verdict=SKIP] { --v: var(--skip); }
+
+/* A soft bloom of the verdict's own colour behind the answer — the page
+   changes mood with the result instead of just changing one word. It sits on
+   its own viewport-sized layer, so the gradient has no box to clip against
+   and there's no visible edge. */
+.result::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60rem 42rem at 18% 18%,
+      color-mix(in srgb, var(--v) 15%, transparent), transparent 70%);
+}
+.result .col-side {
+  border-left-color: color-mix(in srgb, var(--v) 40%, var(--rule-soft));
+}
+.result .ledger .v-strong { color: var(--v); }
 
 .result-head { margin: 0 0 2.2rem; }
 .result-item {
@@ -541,22 +643,23 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 .rail { margin: 3rem 0 2.6rem; }
 .rail-track {
   position: relative;
-  height: 3px;
+  height: 5px;
   display: flex;
   gap: 2px;
   margin-bottom: .5rem;
 }
-.rail-zone { display: block; height: 100%; opacity: .28; }
+.rail-zone { display: block; height: 100%; opacity: .62; border-radius: 1px; }
 .rail-skip { flex: 40; background: var(--skip); }
 .rail-wait { flex: 30; background: var(--wait); }
 .rail-buy  { flex: 30; background: var(--buy); }
 
 .rail-marker {
   position: absolute;
-  top: -.55rem;
+  top: -.5rem;
   left: 0;
-  width: 2px;
+  width: 3px;
   height: 1.5rem;
+  border-radius: 2px;
   background: var(--v);
   transform: translateX(-1px);
   transition: left .7s cubic-bezier(.2,.8,.25,1);
@@ -597,7 +700,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 }
 
 .prose {
-  margin: 0 0 3rem;
+  margin: 0;
   padding: 1.4rem 0 0;
   border-top: 1px solid var(--rule-soft);
   font-family: var(--serif);
@@ -606,21 +709,12 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
   color: var(--ink);
 }
 
-.block { margin-bottom: 2.6rem; }
-.block-head {
-  margin: 0 0 .7rem;
-  font-family: var(--mono);
-  font-size: .68rem;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  font-weight: 400;
-}
+.block + .block { margin-top: 2.4rem; }
 
 .plan-line {
   margin: 1.1rem 0 0;
   font-family: var(--serif);
-  font-size: 1.18rem;
+  font-size: 1.1rem;
   line-height: 1.45;
   color: var(--ink-soft);
 }
@@ -681,7 +775,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin
 /* ── focus ───────────────────────────────────────────────────────────── */
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 1px;
 }

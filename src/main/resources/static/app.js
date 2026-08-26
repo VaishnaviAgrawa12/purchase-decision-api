@@ -19,9 +19,9 @@
   ];
 
   var TYPES = [
-    { id: 'NEED',   label: 'Need',   note: 'can’t go without' },
-    { id: 'WANT',   label: 'Want',   note: 'would enjoy it' },
-    { id: 'LUXURY', label: 'Luxury', note: 'pure treat' }
+    { id: 'NEED',   label: 'Need',   note: 'can’t go without', tone: 'NEED' },
+    { id: 'WANT',   label: 'Want',   note: 'would enjoy it',   tone: 'WANT' },
+    { id: 'LUXURY', label: 'Luxury', note: 'pure treat',       tone: 'LUXURY' }
   ];
 
   var USAGE = [
@@ -166,6 +166,7 @@
       b.type = 'button';
       b.setAttribute('role', 'radio');
       b.setAttribute('aria-checked', item.id === selected ? 'true' : 'false');
+      if (item.tone) b.dataset.tone = item.tone;
       b.appendChild(document.createTextNode(item.label));
       if (item.note) b.appendChild(el('small', null, item.note));
       b.addEventListener('click', function () {
@@ -367,15 +368,19 @@
       state.ask.usageFrequency = id;
     });
 
-    var slack = $('#slackLine');
-    if (state.profile) {
-      slack.hidden = false;
-      slack.textContent = '';
-      slack.appendChild(ledgerRow(
-        'Free to spend each month',
-        money(state.profile.disposableIncome), true));
-    } else {
-      slack.hidden = true;
+    // The sidebar has room for the whole derivation, not just the bottom line.
+    var p = state.profile;
+    $('#slackLine').hidden = !p;
+    if (p) {
+      var host = $('#slackLedger');
+      host.textContent = '';
+      host.appendChild(ledgerRow('Income', money(p.monthlyIncome)));
+      host.appendChild(ledgerRow('Fixed costs', '\u2212' + money(p.totalFixedExpenses)));
+      host.appendChild(ledgerRow('Put away', '\u2212' + money(p.savingsTarget)));
+
+      var total = ledgerRow('Free to spend', money(p.disposableIncome), true);
+      total.classList.add('row-total');
+      host.appendChild(total);
     }
 
     paintPast();

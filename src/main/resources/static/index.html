@@ -31,244 +31,296 @@
 
   <!-- ─────────────────────────── 1. gate ─────────────────────────── -->
   <section class="screen" data-screen="gate">
-    <div class="hero">
-      <p class="eyebrow">A verdict, not a vibe</p>
-      <h1 class="display">
-        Tell it what you want.<br>
-        It tells you <em>buy</em>, <em>wait</em><br>
-        or <em>skip</em> &mdash; and why.
-      </h1>
-      <p class="lede">
-        The arithmetic decides. Your income, your fixed costs, your savings
-        target, measured against one purchase. When the answer is <em>wait</em>,
-        you get the month it stops being a bad idea.
-      </p>
+    <div class="spread spread-hero">
+      <div class="col-main">
+        <p class="eyebrow">A verdict, not a vibe</p>
+        <h1 class="display">
+          Tell it what you want.<br>
+          It tells you <em class="w-buy">buy</em>, <em class="w-wait">wait</em><br>
+          or <em class="w-skip">skip</em> &mdash; and why.
+        </h1>
+        <p class="lede">
+          The arithmetic decides. Your income, your fixed costs, your savings
+          target, measured against one purchase. When the answer is <em>wait</em>,
+          you get the month it stops being a bad idea.
+        </p>
 
-      <div class="cta-row">
-        <button class="btn btn-primary" data-act="demo">
-          Try it with a sample profile
-        </button>
-        <button class="btn btn-ghost" data-act="go-register">Create an account</button>
-        <button class="btn btn-ghost" data-act="go-login">Sign in</button>
+        <div class="cta-row">
+          <button class="btn btn-primary" data-act="demo">
+            Try it with a sample profile
+          </button>
+          <button class="btn btn-ghost" data-act="go-register">Create an account</button>
+          <button class="btn btn-ghost" data-act="go-login">Sign in</button>
+        </div>
+        <p class="fineprint" id="gateNote">
+          The sample profile is a throwaway account &mdash; ₹62,500 a month, ₹25,500
+          of fixed costs, 20% put away. Nothing to fill in.
+        </p>
       </div>
-      <p class="fineprint" id="gateNote">
-        The sample profile is a throwaway account &mdash; ₹62,500 a month, ₹25,500
-        of fixed costs, 20% put away. Nothing to fill in.
-      </p>
-    </div>
 
-    <ol class="how">
-      <li><span class="how-n">01</span><p>Set your monthly picture once.</p></li>
-      <li><span class="how-n">02</span><p>Name the thing and its price.</p></li>
-      <li><span class="how-n">03</span><p>Get a score, a verdict, and a plan.</p></li>
-    </ol>
+      <aside class="col-side">
+        <h2 class="side-head">How it goes</h2>
+        <ol class="how">
+          <li><span class="how-n">01</span><p>Set your monthly picture once.</p></li>
+          <li><span class="how-n">02</span><p>Name the thing and its price.</p></li>
+          <li><span class="how-n">03</span><p>Get a score, a verdict, and a plan.</p></li>
+        </ol>
+        <p class="side-note">
+          The score comes from arithmetic, never from the model &mdash; so the same
+          purchase gets the same verdict every time. The model is only there to
+          say it in a sentence.
+        </p>
+      </aside>
+    </div>
   </section>
 
   <!-- ─────────────────────────── 2. auth ─────────────────────────── -->
   <section class="screen" data-screen="auth" hidden>
-    <div class="sheet">
-      <p class="eyebrow" id="authEyebrow">Account</p>
-      <h2 class="title" id="authTitle">Sign in</h2>
+    <div class="spread">
+      <div class="col-main">
+        <p class="eyebrow" id="authEyebrow">Account</p>
+        <h2 class="title" id="authTitle">Sign in</h2>
 
-      <form id="authForm" class="form" novalidate>
-        <label class="field" id="nameField">
-          <span class="label">Name</span>
-          <input name="name" type="text" autocomplete="name" placeholder="Vaishnavi">
-        </label>
-        <label class="field">
-          <span class="label">Email</span>
-          <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-        </label>
-        <label class="field">
-          <span class="label">Password</span>
-          <input name="password" type="password" autocomplete="current-password" required>
-          <span class="hint" id="pwHint" hidden>At least 8 characters, with a capital, a number and a symbol.</span>
-        </label>
+        <form id="authForm" class="form form-narrow" novalidate>
+          <label class="field" id="nameField">
+            <span class="label">Name</span>
+            <input name="name" type="text" autocomplete="name" placeholder="Vaishnavi">
+          </label>
+          <label class="field">
+            <span class="label">Email</span>
+            <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+          </label>
+          <label class="field">
+            <span class="label">Password</span>
+            <input name="password" type="password" autocomplete="current-password" required>
+            <span class="hint" id="pwHint" hidden>At least 8 characters, with a capital, a number and a symbol.</span>
+          </label>
 
-        <div class="form-error" id="authError" hidden></div>
+          <div class="form-error" id="authError" hidden></div>
 
-        <button class="btn btn-primary btn-block" type="submit" id="authSubmit">Sign in</button>
-      </form>
+          <button class="btn btn-primary btn-block" type="submit" id="authSubmit">Sign in</button>
+        </form>
 
-      <p class="switch">
-        <span id="switchText">No account yet?</span>
-        <button class="link" type="button" id="authSwitch">Create one</button>
-      </p>
-      <p class="switch">
-        <button class="link" type="button" data-act="back-gate">&larr; Back</button>
-      </p>
+        <p class="switch">
+          <span id="switchText">No account yet?</span>
+          <button class="link" type="button" id="authSwitch">Create one</button>
+        </p>
+        <p class="switch">
+          <button class="link" type="button" data-act="back-gate">&larr; Back</button>
+        </p>
+      </div>
+
+      <aside class="col-side">
+        <h2 class="side-head">What happens next</h2>
+        <ol class="how">
+          <li><span class="how-n">01</span><p>Your monthly picture, once.</p></li>
+          <li><span class="how-n">02</span><p>Then a verdict whenever you want one.</p></li>
+        </ol>
+        <p class="side-note">
+          In a hurry? Go back and take the sample profile instead &mdash; it's a
+          throwaway account with the numbers already filled in.
+        </p>
+      </aside>
     </div>
   </section>
 
   <!-- ────────────────────────── 3. profile ───────────────────────── -->
   <section class="screen" data-screen="profile" hidden>
-    <div class="sheet sheet-wide">
-      <p class="eyebrow">Step one, once</p>
-      <h2 class="title">Your monthly picture</h2>
-      <p class="sub">
-        Everything is scored against what's actually left over. Nothing here is
-        shared, and you can change it any time.
-      </p>
+    <div class="spread">
+      <div class="col-main">
+        <p class="eyebrow">Step one, once</p>
+        <h2 class="title">Your monthly picture</h2>
+        <p class="sub">
+          Everything is scored against what's actually left over. Nothing here is
+          shared, and you can change it any time.
+        </p>
 
-      <form id="profileForm" class="form" novalidate>
+        <form id="profileForm" class="form" novalidate>
 
-        <fieldset class="group">
-          <legend class="label">Monthly income</legend>
-          <div class="chips" id="brackets" role="radiogroup" aria-label="Monthly income bracket"></div>
-        </fieldset>
+          <fieldset class="group">
+            <legend class="label">Monthly income</legend>
+            <div class="chips" id="brackets" role="radiogroup" aria-label="Monthly income bracket"></div>
+          </fieldset>
 
-        <fieldset class="group">
-          <legend class="label">Put away each month</legend>
-          <div class="modes" data-mode-group="savings">
-            <button type="button" class="mode is-on" data-mode="PERCENTAGE">% of income</button>
-            <button type="button" class="mode" data-mode="AMOUNT">₹ amount</button>
-          </div>
-          <div class="amount-in">
-            <span class="unit" id="savingsUnit">%</span>
-            <input id="savingsValue" type="number" min="0" step="any" value="20" inputmode="decimal">
-          </div>
-        </fieldset>
-
-        <fieldset class="group">
-          <legend class="label">Fixed costs</legend>
-          <div class="modes" data-mode-group="fixed">
-            <button type="button" class="mode is-on" data-mode="AMOUNT">Itemised</button>
-            <button type="button" class="mode" data-mode="PERCENTAGE">% of income</button>
-          </div>
-
-          <div id="fixedItems">
-            <div class="expense-rows" id="expenseRows"></div>
-            <button type="button" class="link add-row" id="addExpense">+ Add a line</button>
-          </div>
-
-          <div id="fixedPercent" hidden>
-            <div class="amount-in">
-              <span class="unit">%</span>
-              <input id="fixedPercentValue" type="number" min="0" max="100" step="any" value="40" inputmode="decimal">
+          <fieldset class="group">
+            <legend class="label">Put away each month</legend>
+            <div class="modes" data-mode-group="savings">
+              <button type="button" class="mode is-on" data-mode="PERCENTAGE">% of income</button>
+              <button type="button" class="mode" data-mode="AMOUNT">₹ amount</button>
             </div>
-          </div>
-        </fieldset>
+            <div class="amount-in amount-in-narrow">
+              <span class="unit" id="savingsUnit">%</span>
+              <input id="savingsValue" type="number" min="0" step="any" value="20" inputmode="decimal">
+            </div>
+          </fieldset>
 
-        <div class="ledger preview" id="profilePreview" aria-live="polite"></div>
+          <fieldset class="group">
+            <legend class="label">Fixed costs</legend>
+            <div class="modes" data-mode-group="fixed">
+              <button type="button" class="mode is-on" data-mode="AMOUNT">Itemised</button>
+              <button type="button" class="mode" data-mode="PERCENTAGE">% of income</button>
+            </div>
 
-        <div class="form-error" id="profileError" hidden></div>
+            <div id="fixedItems">
+              <div class="expense-rows" id="expenseRows"></div>
+              <button type="button" class="link add-row" id="addExpense">+ Add a line</button>
+            </div>
 
-        <button class="btn btn-primary btn-block" type="submit" id="profileSubmit">Save and continue</button>
-      </form>
+            <div id="fixedPercent" hidden>
+              <div class="amount-in amount-in-narrow">
+                <span class="unit">%</span>
+                <input id="fixedPercentValue" type="number" min="0" max="100" step="any" value="40" inputmode="decimal">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-error" id="profileError" hidden></div>
+
+          <button class="btn btn-primary btn-block" type="submit" id="profileSubmit">Save and continue</button>
+        </form>
+      </div>
+
+      <aside class="col-side">
+        <div class="sticky">
+          <h2 class="side-head">What's left over</h2>
+          <div class="ledger preview" id="profilePreview" aria-live="polite"></div>
+          <p class="side-note">
+            This is the number every verdict is measured against &mdash; income,
+            less the bills, less what you're putting away.
+          </p>
+        </div>
+      </aside>
     </div>
   </section>
 
   <!-- ─────────────────────────── 4. ask ──────────────────────────── -->
   <section class="screen" data-screen="ask" hidden>
-    <div class="sheet sheet-wide">
-      <p class="eyebrow">The question</p>
-      <h2 class="title">What are you thinking of buying?</h2>
+    <div class="spread">
+      <div class="col-main">
+        <p class="eyebrow">The question</p>
+        <h2 class="title">What are you thinking of buying?</h2>
 
-      <form id="askForm" class="form" novalidate>
-        <div class="row-2">
-          <label class="field">
-            <span class="label">The thing</span>
-            <input name="itemName" type="text" placeholder="Sony WH-1000XM5 headphones" maxlength="200" required>
-          </label>
-          <label class="field field-narrow">
-            <span class="label">Price</span>
-            <div class="amount-in">
-              <span class="unit">₹</span>
-              <input name="price" type="number" min="1" step="any" inputmode="decimal" placeholder="30000" required>
-            </div>
-          </label>
-        </div>
-
-        <fieldset class="group">
-          <legend class="label">Is it a…</legend>
-          <div class="chips chips-3" id="purchaseType" role="radiogroup" aria-label="Purchase type"></div>
-        </fieldset>
-
-        <fieldset class="group">
-          <legend class="label">How often would you use it?</legend>
-          <div class="chips chips-4" id="usageFrequency" role="radiogroup" aria-label="Usage frequency"></div>
-        </fieldset>
-
-        <details class="more">
-          <summary>Optional details</summary>
-          <div class="more-body">
-            <div class="row-2">
-              <label class="field">
-                <span class="label">Category</span>
-                <input name="category" type="text" placeholder="Electronics" maxlength="100">
-              </label>
-              <label class="field field-narrow">
-                <span class="label">Ongoing cost / month</span>
-                <div class="amount-in">
-                  <span class="unit">₹</span>
-                  <input name="monthlyRecurringCost" type="number" min="0" step="any" inputmode="decimal" placeholder="0">
-                </div>
-              </label>
-            </div>
+        <form id="askForm" class="form" novalidate>
+          <div class="row-2">
             <label class="field">
-              <span class="label">Why you want it</span>
-              <input name="reason" type="text" maxlength="500" placeholder="My current pair broke and I take calls all day">
+              <span class="label">The thing</span>
+              <input name="itemName" type="text" placeholder="Sony WH-1000XM5 headphones" maxlength="200" required>
+            </label>
+            <label class="field field-narrow">
+              <span class="label">Price</span>
+              <div class="amount-in">
+                <span class="unit">₹</span>
+                <input name="price" type="number" min="1" step="any" inputmode="decimal" placeholder="30000" required>
+              </div>
             </label>
           </div>
-        </details>
 
-        <div class="form-error" id="askError" hidden></div>
+          <fieldset class="group">
+            <legend class="label">Is it a…</legend>
+            <div class="chips chips-3" id="purchaseType" role="radiogroup" aria-label="Purchase type"></div>
+          </fieldset>
 
-        <button class="btn btn-primary btn-block" type="submit" id="askSubmit">Get the verdict</button>
-      </form>
+          <fieldset class="group">
+            <legend class="label">How often would you use it?</legend>
+            <div class="chips chips-4" id="usageFrequency" role="radiogroup" aria-label="Usage frequency"></div>
+          </fieldset>
 
-      <div class="ledger slack" id="slackLine" hidden></div>
+          <details class="more">
+            <summary>Optional details</summary>
+            <div class="more-body">
+              <div class="row-2">
+                <label class="field">
+                  <span class="label">Category</span>
+                  <input name="category" type="text" placeholder="Electronics" maxlength="100">
+                </label>
+                <label class="field field-narrow">
+                  <span class="label">Ongoing cost / month</span>
+                  <div class="amount-in">
+                    <span class="unit">₹</span>
+                    <input name="monthlyRecurringCost" type="number" min="0" step="any" inputmode="decimal" placeholder="0">
+                  </div>
+                </label>
+              </div>
+              <label class="field">
+                <span class="label">Why you want it</span>
+                <input name="reason" type="text" maxlength="500" placeholder="My current pair broke and I take calls all day">
+              </label>
+            </div>
+          </details>
 
-      <section class="past" id="past" hidden>
-        <h3 class="past-head">Earlier on this device</h3>
-        <ul class="past-list" id="pastList"></ul>
-      </section>
+          <div class="form-error" id="askError" hidden></div>
+
+          <button class="btn btn-primary btn-block" type="submit" id="askSubmit">Get the verdict</button>
+        </form>
+      </div>
+
+      <aside class="col-side">
+        <div class="sticky">
+          <div id="slackLine" hidden>
+            <h2 class="side-head">Your month</h2>
+            <div class="ledger" id="slackLedger"></div>
+          </div>
+
+          <section class="past" id="past" hidden>
+            <h2 class="side-head">Earlier on this device</h2>
+            <ul class="past-list" id="pastList"></ul>
+          </section>
+        </div>
+      </aside>
     </div>
   </section>
 
   <!-- ───────────────────────── 5. verdict ────────────────────────── -->
   <section class="screen" data-screen="verdict" hidden>
     <article class="result" id="result">
-      <header class="result-head">
-        <p class="result-item" id="rItem"></p>
-        <p class="result-price" id="rPrice"></p>
-      </header>
+      <div class="spread">
+        <div class="col-main">
+          <header class="result-head">
+            <p class="result-item" id="rItem"></p>
+            <p class="result-price" id="rPrice"></p>
+          </header>
 
-      <p class="verdict-word" id="rVerdict"></p>
-      <p class="verdict-gloss" id="rGloss"></p>
+          <p class="verdict-word" id="rVerdict"></p>
+          <p class="verdict-gloss" id="rGloss"></p>
 
-      <div class="rail">
-        <div class="rail-track">
-          <span class="rail-zone rail-skip"></span>
-          <span class="rail-zone rail-wait"></span>
-          <span class="rail-zone rail-buy"></span>
-          <span class="rail-marker" id="rMarker"><b id="rScore">0</b></span>
+          <div class="rail">
+            <div class="rail-track">
+              <span class="rail-zone rail-skip"></span>
+              <span class="rail-zone rail-wait"></span>
+              <span class="rail-zone rail-buy"></span>
+              <span class="rail-marker" id="rMarker"><b id="rScore">0</b></span>
+            </div>
+            <div class="rail-scale">
+              <span class="t t0">0</span>
+              <span class="t t40">40</span>
+              <span class="t t70">70</span>
+              <span class="t t100">100</span>
+            </div>
+            <p class="rail-caption">Affordability score</p>
+          </div>
+
+          <blockquote class="prose" id="rProse"></blockquote>
+
+          <div class="cta-row cta-end">
+            <button class="btn btn-primary" data-act="again">Ask about something else</button>
+            <button class="btn btn-ghost" data-act="edit-profile">Edit my profile</button>
+          </div>
         </div>
-        <div class="rail-scale">
-          <span class="t t0">0</span>
-          <span class="t t40">40</span>
-          <span class="t t70">70</span>
-          <span class="t t100">100</span>
-        </div>
-        <p class="rail-caption">Affordability score</p>
-      </div>
 
-      <blockquote class="prose" id="rProse"></blockquote>
+        <aside class="col-side">
+          <div class="sticky">
+            <section class="block">
+              <h2 class="side-head">The arithmetic</h2>
+              <dl class="ledger" id="rMath"></dl>
+            </section>
 
-      <section class="block">
-        <h3 class="block-head">The arithmetic</h3>
-        <dl class="ledger" id="rMath"></dl>
-      </section>
-
-      <section class="block" id="rPlanBlock" hidden>
-        <h3 class="block-head">The plan</h3>
-        <dl class="ledger" id="rPlan"></dl>
-        <p class="plan-line" id="rPlanLine"></p>
-      </section>
-
-      <div class="cta-row cta-end">
-        <button class="btn btn-primary" data-act="again">Ask about something else</button>
-        <button class="btn btn-ghost" data-act="edit-profile">Edit my profile</button>
+            <section class="block" id="rPlanBlock" hidden>
+              <h2 class="side-head">The plan</h2>
+              <dl class="ledger" id="rPlan"></dl>
+              <p class="plan-line" id="rPlanLine"></p>
+            </section>
+          </div>
+        </aside>
       </div>
     </article>
   </section>
